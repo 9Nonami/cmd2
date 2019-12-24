@@ -4,15 +4,16 @@ public class Scene {
 
     private char[] image;
     private Game game;
+    private int player = 36;
 
     public Scene(Game game, char[] image) {
         this.game = game;
         this.image = image;
     }
 
-    private void copyArr(char[] temp) {
+    private void copyArr(char[] edit) {
         for (int i = 0; i < image.length; i++) {
-            temp[i] = image[i];            
+            edit[i] = image[i];            
         }
     }
 
@@ -22,11 +23,75 @@ public class Scene {
         }
     }
 
+    private void addPlayer(char[] edit) {
+        edit[player] = 'X';
+    }
+
+    public void update() {
+        manageInput();
+        clearScreen();
+    }
+
+    private boolean okMoveX(char x) {
+        return game.getX().containsKey(x);
+    }
+
+    private boolean okMoveY(char y) {
+        return game.getY().containsKey(y);
+    }
+
+    private void move(char x, char y) {
+        if (okMoveX(x) && okMoveY(y)) {
+            player = game.getX().get(x) + game.getY().get(y); 
+        }
+    }
+
+    private void quit(String res) {
+        if (res.equalsIgnoreCase("quit")) {
+            System.exit(0);
+        }
+    }
+
+    private void manageInput() {
+        
+        String res = game.getScanner().next();
+
+        quit(res);
+
+        char[] splited = res.toCharArray();
+        
+        if (splited.length == 2) { //2 = x,y
+            move(splited[0], splited[1]);
+        }
+
+    }
+
+    private void clearScreen() {
+        try {
+
+            ProcessBuilder pb = null;
+
+            if (game.getOs().startsWith("l")) {
+                pb = new ProcessBuilder("clear");
+            } else if (game.getOs().startsWith("w")) {
+                pb = new ProcessBuilder("cmd", "/c", "cls");
+            }
+
+            pb.inheritIO();
+            Process p = pb.start();
+            p.waitFor();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void render() {
 
         char[] edit = new char[image.length];
         copyArr(edit);
         addFrame(edit);
+        addPlayer(edit);
 
         for (int i = 0; i < Res.WIDTH * Res.HEIGHT; i++) {
             if (i != 0 && i % Res.WIDTH == 0) {

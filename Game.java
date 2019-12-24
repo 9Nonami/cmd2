@@ -1,12 +1,16 @@
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Game {
 
-	private HashMap<Integer, Character> map;
-	private Scene scene;
+    private HashMap<Integer, Character> map;
+    private HashMap<Character, Integer> x;
+    private HashMap<Character, Integer> y;
+    private Scene scene;
+    private Scanner scanner;
+    private String os;
 
-
-	public Game() {
+    public Game() {
 		map = new HashMap<Integer, Character>();
         map.put(0, ' ');
         map.put(1, 'A');
@@ -101,18 +105,80 @@ public class Game {
         map.put(375, 'a');
         map.put(376, ' ');
 
+        x = new HashMap<Character, Integer>();
+        x.put('A', 1);
+        x.put('B', 2);
+        x.put('C', 3);
+        x.put('D', 4);
+        x.put('E', 5);
+        x.put('F', 6);
+        x.put('G', 7);
+        x.put('H', 8);
+        x.put('I', 9);
+        x.put('J', 10);
+        x.put('K', 11);
+        x.put('L', 12);
+        x.put('M', 13);
+        x.put('N', 14);
+        x.put('O', 15);
+        x.put('P', 16);
+        x.put('Q', 17);
+        x.put('R', 18);
+        x.put('S', 19);
+        x.put('T', 20);
+        x.put('U', 21);
+        x.put('V', 22);
+        x.put('W', 23);
+        x.put('X', 24);
+        x.put('Y', 25);
+        x.put('Z', 26);
+        x.put('a', 27);
+
+        y = new HashMap<Character, Integer>();
+        y.put('A', 29);
+        y.put('B', 58);
+        y.put('C', 87);
+        y.put('D', 116);
+        y.put('E', 145);
+        y.put('F', 174);
+        y.put('G', 203);
+        y.put('H', 232);
+        y.put('I', 261);
+        y.put('J', 290);
+        y.put('K', 319);
+
+
+        scanner = new Scanner(System.in);
         scene = new Scene(this, Res.chess);
-	}
 
-	public void update() {}
+        os = System.getProperty("os.name").toLowerCase();
+    }
 
-	public void render() {
-		scene.render();
-	}
+    public void start() {
+        while(true) {
+            scene.render();
+            scene.update();
+        }
+    }
 
-	public HashMap<Integer, Character> getMap() {
+    public HashMap<Integer, Character> getMap() {
 		return map;
-	}
+    }
 
+    public HashMap<Character, Integer> getX() {
+        return x;
+    }
+
+    public HashMap<Character, Integer> getY() {
+        return y;
+    }
+
+    public String getOs() {
+        return os;
+    }
+
+    public Scanner getScanner() {
+        return scanner;
+    }
 
 }
