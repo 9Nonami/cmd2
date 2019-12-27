@@ -1,17 +1,20 @@
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class Game {
+public class Game { //colisao
 
     private HashMap<Integer, Character> map;
     private HashMap<Character, Integer> x;
     private HashMap<Character, Integer> y;
-    private Scene scene;
+    private HashMap<Integer, Scene> scenes;
+    private Scene sceneBasis;
+    private int scene;
     private Scanner scanner;
     private String os;
+    private Player player;
 
     public Game() {
-		map = new HashMap<Integer, Character>();
+	    map = new HashMap<Integer, Character>();
         map.put(0, ' ');
         map.put(1, 'A');
         map.put(2, 'B');
@@ -147,18 +150,47 @@ public class Game {
         y.put('J', 290);
         y.put('K', 319);
 
+        player = new Player(x.get('A') + y.get('A')); //lastId
 
         scanner = new Scanner(System.in);
-        scene = new Scene(this, Res.chess);
 
         os = System.getProperty("os.name").toLowerCase();
+
+        scene = 0;
+
+        scenes = new HashMap<Integer, Scene>();
+
+        //cena 0
+        MapScene scene0 = new MapScene(this, Res.CASTEL, new Exit[]{new Exit(x.get('R') + y.get('H'), 1, x.get('N') + y.get('J'))});
+        scenes.put(0, scene0);
+
+        //cena 1
+        MapScene scene1 = new MapScene(this, Res.INSIDE_CASTEL, new Exit[]{new Exit(x.get('N') + y.get('K'), 0, x.get('R') + y.get('I'))});
+        scene1.setNpc(new Npc[]{new Npc(x.get('O') + y.get('B'), 2)});
+        scenes.put(1, scene1);
+
+        //cena 2
+        TalkScene scene2 = new TalkScene(this, Res.MI, 1, x.get('N') + y.get('B'));
+        scene2.setTexts(new String[]{"Hello, darkness!\nMy old friend!", "Wanna play?", "Pretty please?"});
+        scenes.put(2, scene2);
+
+
+
+
+        sceneBasis = scenes.get(scene);
     }
 
     public void start() {
         while(true) {
-            scene.render();
-            scene.update();
+            sceneBasis.render();
+            sceneBasis.update();
         }
+    }
+
+    public void changeScene() {
+        scene = sceneBasis.getNextScene();
+        sceneBasis.reset();
+        sceneBasis = scenes.get(scene);
     }
 
     public HashMap<Integer, Character> getMap() {
@@ -179,6 +211,10 @@ public class Game {
 
     public Scanner getScanner() {
         return scanner;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
 }

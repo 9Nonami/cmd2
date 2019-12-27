@@ -1,72 +1,31 @@
-import java.util.Map;
+public abstract class Scene {
 
-public class Scene {
-
-    private char[] image;
-    private Game game;
-    private int player = 36;
+    protected Game game;
+    protected char[] image;
+    protected int nextScene;
+    protected Player player;
+    protected String res;
 
     public Scene(Game game, char[] image) {
         this.game = game;
         this.image = image;
+        player = game.getPlayer();
     }
 
-    private void copyArr(char[] edit) {
-        for (int i = 0; i < image.length; i++) {
-            edit[i] = image[i];            
-        }
-    }
-
-    private void addFrame(char[] edit) {
-        for (Map.Entry<Integer, Character> temp : game.getMap().entrySet()) {
-            edit[temp.getKey()] = temp.getValue();
-        }
-    }
-
-    private void addPlayer(char[] edit) {
-        edit[player] = 'X';
+    private void verifyPriorityCommands() {
+    	if (res.equalsIgnoreCase("quit")) {
+    		System.exit(0);
+    	}
     }
 
     public void update() {
-        manageInput();
-        clearScreen();
+    	res = game.getScanner().next();
+    	verifyPriorityCommands();
     }
 
-    private boolean okMoveX(char x) {
-        return game.getX().containsKey(x);
-    }
+    public abstract void render();
 
-    private boolean okMoveY(char y) {
-        return game.getY().containsKey(y);
-    }
-
-    private void move(char x, char y) {
-        if (okMoveX(x) && okMoveY(y)) {
-            player = game.getX().get(x) + game.getY().get(y); 
-        }
-    }
-
-    private void quit(String res) {
-        if (res.equalsIgnoreCase("quit")) {
-            System.exit(0);
-        }
-    }
-
-    private void manageInput() {
-        
-        String res = game.getScanner().next();
-
-        quit(res);
-
-        char[] splited = res.toCharArray();
-        
-        if (splited.length == 2) { //2 = x,y
-            move(splited[0], splited[1]);
-        }
-
-    }
-
-    private void clearScreen() {
+    protected void clearScreen() {
         try {
 
             ProcessBuilder pb = null;
@@ -75,6 +34,9 @@ public class Scene {
                 pb = new ProcessBuilder("clear");
             } else if (game.getOs().startsWith("w")) {
                 pb = new ProcessBuilder("cmd", "/c", "cls");
+            } else {
+            	System.out.println("os error");
+            	System.exit(0);
             }
 
             pb.inheritIO();
@@ -86,44 +48,10 @@ public class Scene {
         }
     }
 
-    public void render() {
-
-        char[] edit = new char[image.length];
-        copyArr(edit);
-        addFrame(edit);
-        addPlayer(edit);
-
-        for (int i = 0; i < Res.WIDTH * Res.HEIGHT; i++) {
-            if (i != 0 && i % Res.WIDTH == 0) {
-                System.out.println("");
-            }
-
-            if (edit[i] == Res.BLACK) {
-                System.out.print("  ");
-            } else if (edit[i] == Res.WHITE) {
-                System.out.print("\u2588\u2588");
-            } else if (edit[i] == Res.GRAY_25) {
-                System.out.print("\u2591\u2591");
-            } else if (edit[i] == Res.GRAY_50) {
-                System.out.print("\u2592\u2592");
-            } else if (edit[i] == Res.GRAY_75) {
-                System.out.print("\u2593\u2593");
-            } else if (edit[i] == Res.RED) {
-                System.out.print("##");
-            } else if (edit[i] == Res.GREEN) {
-                System.out.print("HH");
-            } else if (edit[i] == Res.BLUE) {
-                System.out.print("\\\\");
-            } else if (edit[i] == Res.PINK) {
-                System.out.print("\u259E\u259E");
-            } else if (edit[i] == Res.YELLOW) {
-                System.out.print("||");
-            } else {
-                System.out.print(edit[i] + " ");
-            }
-
-        }
-        System.out.println("");
+    public int getNextScene() {
+    	return nextScene;
     }
+
+    public abstract void reset();
 
 }
