@@ -2,87 +2,82 @@ import java.util.Map;
 
 public class MapScene extends Scene {
 
-	private Exit[] exits;
+    private Exit[] exits;
     private Npc[] npcs;
 
-	public MapScene(Game game, char[] image, Exit[] exits) {
-		super(game, image);
-		this.exits = exits;
-	}
+    public MapScene(Game game, char[] image, Exit[] exits) {
+        super(game, image);
+        this.exits = exits;
+    }
 
     public void setNpc(Npc[] npcs) {
         this.npcs = npcs;
     }
 
 
-	//UPDATE STUFF ----------------------------------------------
-	private void verifyNpcs() {
+    //UPDATE STUFF ----------------------------------------------
+    private boolean move(int newId) {
+        player.setLastId(player.getId());
+        player.setId(newId);
+        return true;
+    }
+
+    private boolean isGoingToTalkWithNpc(int newId) {
         if (npcs != null) {
             for (Npc temp : npcs) {
-                if (player.getId() == temp.getId()) {
+                if (newId == temp.getId()) {
                     nextScene = temp.getNextScene();
-                    player.setId(player.getLastId());
                     game.changeScene();
-                    break;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private boolean isGoingToExit(int newId) {
+        for (int i = 0; i < exits.length; i++) {
+            if (exits[i].getEntryPoint() == newId) {
+                nextScene = exits[i].getNextScene();
+                player.setId(exits[i].getPlayerPosition());
+                game.changeScene();
+                return true;
+            }
+        }
+        return false;
+    }    
+
+    private boolean isValidMove(char[] splitted) {
+        return game.getX().containsKey(splitted[0]) && game.getY().containsKey(splitted[1]);
+    }
+
+    private void manageInput() {
+        char[] splitted = res.toCharArray();
+        if (splitted.length == 2) {
+            if (isValidMove(splitted)) {
+                int newId = game.getX().get(splitted[0]) + game.getY().get(splitted[1]);
+                if (isGoingToExit(newId)) {
+
+                } else if (isGoingToTalkWithNpc(newId)) {
+                   
+                } else if (move(newId)){
+                    
                 }
             }
         }
     }
 
-    private void move(int newId) {
-        player.setLastId(player.getId());
-        player.setId(newId);
+    @Override
+    public void update() {
+        super.update();
+        manageInput();
+        clearScreen();
     }
-
-    private boolean isAtExit(int newId){
-        for (int i = 0; i < exits.length; i++) {
-            if (exits[i].getEntryPoint() == newId) {
-                nextScene = exits[i].getNextScene();
-                player.setId(exits[i].getPlayerPosition());
-                return true;
-            }
-        }
-        return false;
-    }
-
-	private boolean okMoveX(char x) {
-        return game.getX().containsKey(x);
-    }
-
-    private boolean okMoveY(char y) {
-        return game.getY().containsKey(y);
-    }
-
-	private void verifyMovement(char[] splitted) {
-        if (splitted.length == 2) { //2 = x,y
-        	if (okMoveX(splitted[0]) && okMoveY(splitted[1])) {
-            	int newId = game.getX().get(splitted[0]) + game.getY().get(splitted[1]);
-            	if (isAtExit(newId)) {
-                	game.changeScene();
-            	} else {
-                	move(newId);
-            	}
-        	}
-    	}
-    }
-
-	private void manageInput() {
-        char[] splitted = res.toCharArray();
-        verifyMovement(splitted); //return, nao precisa verificar o npc
-        verifyNpcs();
-    }
-
-	@Override
-	public void update() {
-		super.update();
-		manageInput();
-		clearScreen();
-	}
-	//-----------------------------------------------------------
+    //-----------------------------------------------------------
 
 
-	//RENDER STUFF ----------------------------------------------
-	private void copyArr(char[] edit) {
+    //RENDER STUFF ----------------------------------------------
+    private void copyArr(char[] edit) {
         for (int i = 0; i < image.length; i++) {
             edit[i] = image[i];            
         }
@@ -107,7 +102,7 @@ public class MapScene extends Scene {
     }
 
     private void drawImage(char[] edit) {
-    	for (int i = 0; i < Res.WIDTH * Res.HEIGHT; i++) {
+        for (int i = 0; i < Res.WIDTH * Res.HEIGHT; i++) {
             if (i != 0 && i % Res.WIDTH == 0) {
                 System.out.println("");
             }
@@ -140,21 +135,21 @@ public class MapScene extends Scene {
         System.out.println("");
     }
 
-	@Override
-	public void render() {
-		char[] edit = new char[image.length];
+    @Override
+    public void render() {
+        char[] edit = new char[image.length];
         copyArr(edit);
         addFrame(edit);
         addPlayer(edit);
         addNpcs(edit);
         drawImage(edit);
-	}
-	//-----------------------------------------------------------
+    }
+    //-----------------------------------------------------------
 
 
-	@Override
-	public void reset() {
+    @Override
+    public void reset() {
 
-	}
+    }
 
 }
