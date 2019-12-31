@@ -1,18 +1,56 @@
 import java.util.Map;
+import java.util.Random;
 
 public class MapScene extends Scene {
 
     private Exit[] exits;
     private Npc[] npcs;
 
+    //
+    private boolean containsMonsters; //set monsters type "uno, dos, tres" >> contains = true
+    private int random; //deixar na cena do enemy
+    //private int monsterEncounterRate;
+    //private boolean monsterAtSpecificTile;
+    //private char monsterTile;
+
+    private boolean containsEnemies;
+    
+    private boolean hasEncounterTile;
+    private char encounterTile;
+    
+    private String enemies;
+
+
+
     public MapScene(Game game, char[] image, Exit[] exits) {
         super(game, image);
         this.exits = exits;
+        containsMonsters = false;
     }
 
     public void setNpc(Npc[] npcs) {
         this.npcs = npcs;
     }
+
+    //del
+    public void setContainsMonsters(boolean containsMonsters) {
+        this.containsMonsters = containsMonsters;
+    }
+
+    public void setEnemies(String enemies) {
+        containsEnemies = true;
+        this.enemies = enemies;
+    }
+
+    public void setEnemies(char encounterTile, String enemies) {
+        containsEnemies = true;
+        hasEncounterTile = true;
+        this.encounterTile = encounterTile;
+        this.enemies = enemies;
+    }
+
+
+
 
 
     //UPDATE STUFF ----------------------------------------------
@@ -20,6 +58,23 @@ public class MapScene extends Scene {
         player.setLastId(player.getId());
         player.setId(newId);
         return true;
+    }
+
+    private boolean isGoingToEncounterAMonster(int newId) { //fix //specific tile
+        if (containsMonsters) {
+            if (player.getId() != newId) {
+                random = new Random().nextInt(10);
+                if (random < 3) { //definir essa parada aqui
+                    player.setId(newId);
+                    game.getEnemyScene().setNextScene(game.getScene()); //isso aqui esta atribuindo a cena para a qual coltar
+                    //pirulei
+                    //getEnemyScene().configureEnemies(enemies); //"uno_10 dos_90"
+                    game.changeScene(game.getEnemyScene());
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean isGoingToTalkWithNpc(int newId) {
@@ -60,6 +115,8 @@ public class MapScene extends Scene {
 
                 } else if (isGoingToTalkWithNpc(newId)) {
                    
+                } else if (isGoingToEncounterAMonster(newId)) {
+
                 } else if (move(newId)){
                     
                 }
@@ -143,6 +200,8 @@ public class MapScene extends Scene {
         addPlayer(edit);
         addNpcs(edit);
         drawImage(edit);
+
+        System.out.println("lastId: " + player.getLastId() + ", Id: " + player.getId() + " random: " + random);
     }
     //-----------------------------------------------------------
 

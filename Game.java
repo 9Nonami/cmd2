@@ -13,6 +13,12 @@ public class Game { //colisao
     private String os;
     private Player player;
 
+    //
+    private EnemyScene enemyScene;
+    private Enemies enemies;
+
+
+
     public Game() {
 	    map = new HashMap<Integer, Character>();
         map.put(0, ' ');
@@ -150,7 +156,12 @@ public class Game { //colisao
         y.put('J', 290);
         y.put('K', 319);
 
-        player = new Player(x.get('A') + y.get('A')); //lastId
+
+        enemies = new Enemies(); //db com todos inimigos
+        enemyScene = new EnemyScene(this); //cena a qual escolhera um inimigo dentre os passados pelo map e fara o u/r
+
+        player = new Player(x.get('A') + y.get('A'));
+        player.setLastId(player.getId());
 
         scanner = new Scanner(System.in);
 
@@ -162,6 +173,7 @@ public class Game { //colisao
 
         //cena 0
         MapScene scene0 = new MapScene(this, Res.CASTEL, new Exit[]{new Exit(x.get('R') + y.get('H'), 1, x.get('N') + y.get('J'))});
+        scene0.setContainsMonsters(true);
         scenes.put(0, scene0);
 
         //cena 1
@@ -173,7 +185,6 @@ public class Game { //colisao
         TalkScene scene2 = new TalkScene(this, Res.MI, 1, x.get('N') + y.get('B'));
         scene2.setTexts(new String[]{"Hello, darkness!\nMy old friend!", "Wanna play?", "Pretty please?"});
         scenes.put(2, scene2);
-
 
 
 
@@ -191,6 +202,11 @@ public class Game { //colisao
         scene = sceneBasis.getNextScene();
         sceneBasis.reset();
         sceneBasis = scenes.get(scene);
+    }
+
+    public void changeScene(Scene scene) {
+        sceneBasis.reset();
+        sceneBasis = scene;
     }
 
     public HashMap<Integer, Character> getMap() {
@@ -215,6 +231,18 @@ public class Game { //colisao
 
     public Player getPlayer() {
         return player;
+    }
+
+    public EnemyScene getEnemyScene() {
+        return enemyScene;
+    }
+
+    public Enemies getEnemies() {
+        return enemies;
+    }
+
+    public int getScene() {
+        return scene;
     }
 
 }

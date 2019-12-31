@@ -1,7 +1,10 @@
 public class Main {
     public static void main(String[] args) {
-        new Game().start();
+        //new Game().start();
+        
         //s.next() == enter nao vai funcionar ate receber um caractere != ENTER != SPACE
         //s.nextLine() == recebe caractere vazio, como ENTER e SPACE
+    	char c = '0';
+    	System.out.println(c);
     }
 }
