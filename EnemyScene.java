@@ -44,14 +44,13 @@ public class EnemyScene extends Scene {
 		if (res.equalsIgnoreCase("run")) {
 			game.changeScene();
 		}
-		//enemy.update(res);
+		enemy.update(); //res
 		clearScreen();
 	}
 
 	@Override
 	public void render() {
-		drawImage(); //del, nao tem imagem
-		//enemy.render();
+		enemy.render();
 	}
 
 	@Override
