@@ -3,6 +3,7 @@ import java.util.Random;
 public class EnemyScene extends Scene {
 
 	private Enemy enemy;
+	private int mapLevel;
 
 
 
@@ -10,10 +11,17 @@ public class EnemyScene extends Scene {
 		super(game);
 	}
 
-	public void configureEnemies(String enemies) {
+	private void cloneEnemy(Enemy original) {
+		Enemy clone = new Enemy(original.getImage(), original.getName(), original.getHp() + mapLevel, original.getAttack() + mapLevel, original.getDeffense() + mapLevel, original.getSpeed() + mapLevel, original.getLuck() + original.getLuckIncrement(mapLevel));
+		enemy = clone;
+	}
+
+	public void configureEnemies(String enemies, int mapLevel) {
+		this.mapLevel = mapLevel;
+		Enemy original = null;
 		String[] splitted = enemies.split(" ");
 		if (splitted.length > 1) {
-			//
+
 			int[] ranges = new int[splitted.length];
 			String[] names = new String[splitted.length];
 
@@ -26,16 +34,16 @@ public class EnemyScene extends Scene {
 			int random = new Random().nextInt(100); //0~99
 
 			for (int i = 0; i < ranges.length; i++) {
-				//
 				if (random < ranges[i]) {
-					enemy = game.getEnemies().get(names[i]);
+					original = game.getEnemies().get(names[i]);
 					break;
 				}
 			}
 		} else {
 			String[] temp = enemies.split("_");
-			enemy = game.getEnemies().get(temp[0]);
+			original = game.getEnemies().get(temp[0]);
 		}
+		cloneEnemy(original);
 	}
 
 	@Override
@@ -43,22 +51,37 @@ public class EnemyScene extends Scene {
 		super.update();
 		if (res.equalsIgnoreCase("run")) {
 			game.changeScene();
+		} else if (res.equalsIgnoreCase("attack")) {
+			boolean playerFirst = false;
+			if (enemy.getSpeed() == game.getPlayer().getSpeed()) {
+				int random = new Random().nextInt(2);
+				if (random % 2 == 0) {
+					playerFirst = true;
+				}
+			} else if (enemy.getSpeed() < game.getPlayer().getSpeed()) {
+				playerFirst = true;
+			}
+			if (playerFirst) {
+				player.attack(enemy);
+				enemy.attack(player);
+			} else {
+				enemy.attack(player);
+				player.attack(enemy);
+			}
 		}
-		enemy.update(); //res
 		clearScreen();
 	}
 
 	@Override
 	public void render() {
 		enemy.render();
+		player.displayBattleLog();
+		enemy.displayBattleLog();
 	}
 
 	@Override
 	public void reset() {
-		//enemy.reset(); //??
+		
 	}
-
-
-	//level de acordo com o do player
 
 }

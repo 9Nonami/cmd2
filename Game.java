@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Game { //colisao
 
-    private HashMap<Integer, Character> map;
+    private HashMap<Integer, Character> map; //frame
     private HashMap<Character, Integer> x;
     private HashMap<Character, Integer> y;
     private HashMap<Integer, Scene> scenes;
@@ -14,8 +14,8 @@ public class Game { //colisao
     private Player player;
 
     //
-    private EnemyScene enemyScene;
     private Enemies enemies;
+    private EnemyScene enemyScene;
 
 
 
@@ -157,11 +157,11 @@ public class Game { //colisao
         y.put('K', 319);
 
 
-        enemies = new Enemies(); //db com todos inimigos
-        enemyScene = new EnemyScene(this); //cena a qual escolhera um inimigo dentre os passados pelo map e fara o u/r
-
         player = new Player(x.get('A') + y.get('A'));
         player.setLastId(player.getId());
+
+        enemies = new Enemies(); //db com todos inimigos
+        enemyScene = new EnemyScene(this); //cena a qual escolhera um inimigo dentre os passados pelo map e fara o u/r
 
         scanner = new Scanner(System.in);
 
@@ -173,7 +173,7 @@ public class Game { //colisao
 
         //cena 0
         MapScene scene0 = new MapScene(this, Res.CASTEL, new Exit[]{new Exit(x.get('R') + y.get('H'), 1, x.get('N') + y.get('J'))});
-        scene0.setEnemies("zuzu_99");
+        scene0.setEnemies(Res.ZUZU + "_49" + " " + Res.MONSTER + "_99", 0);
         scenes.put(0, scene0);
 
         //cena 1

@@ -14,6 +14,8 @@ public class MapScene extends Scene {
     private char encounterTile;
     private String enemies;
 
+    private int level;
+
 
 
     public MapScene(Game game, char[] image, Exit[] exits) {
@@ -25,9 +27,10 @@ public class MapScene extends Scene {
         this.npcs = npcs;
     }
 
-    public void setEnemies(String enemies) {
+    public void setEnemies(String enemies, int level) {
         containsEnemies = true;
         this.enemies = enemies;
+        this.level = level;
     }
 
     public void setEnemies(char encounterTile, String enemies) {
@@ -48,10 +51,10 @@ public class MapScene extends Scene {
         if (containsEnemies) {
             if (player.getId() != newId) {
                 random = new Random().nextInt(10);
-                if (random < 3) { //definir essa parada aqui
+                if (random < 10) { //definir essa parada aqui
                     player.setId(newId);
                     game.getEnemyScene().setNextScene(game.getScene()); //isso aqui esta atribuindo a cena para a qual voltar
-                    game.getEnemyScene().configureEnemies(enemies); //"uno_9 dos_99"
+                    game.getEnemyScene().configureEnemies(enemies, level); //"uno_9 dos_99"
                     game.changeScene(game.getEnemyScene());
                     return true;
                 }
