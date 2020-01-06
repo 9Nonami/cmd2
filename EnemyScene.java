@@ -6,6 +6,9 @@ public class EnemyScene extends Scene {
 	private int mapLevel;
 
 
+	private boolean lockLog;
+	private boolean encounterLog;
+
 
 	public EnemyScene(Game game) {
 		super(game);
@@ -44,6 +47,9 @@ public class EnemyScene extends Scene {
 			original = game.getEnemies().get(temp[0]);
 		}
 		cloneEnemy(original);
+
+		encounterLog = true;
+		lockLog = false;
 	}
 
 	@Override
@@ -68,6 +74,7 @@ public class EnemyScene extends Scene {
 				enemy.attack(player);
 				player.attack(enemy);
 			}
+			lockLog = false;
 		}
 		clearScreen();
 	}
@@ -75,13 +82,20 @@ public class EnemyScene extends Scene {
 	@Override
 	public void render() {
 		enemy.render();
-		player.displayBattleLog();
-		enemy.displayBattleLog();
+
+		if (encounterLog) {
+			System.out.println("VOCE ENCONTROU UM PENIS LONGO");
+			encounterLog = false;
+		} else if (!lockLog) {
+			player.displayBattleLog();
+			enemy.displayBattleLog();
+		}
+		lockLog = true;
 	}
 
 	@Override
 	public void reset() {
-		
+		//		
 	}
 
 }
