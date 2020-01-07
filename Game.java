@@ -173,7 +173,7 @@ public class Game { //colisao
 
         //cena 0
         MapScene scene0 = new MapScene(this, Res.CASTEL, new Exit[]{new Exit(x.get('R') + y.get('H'), 1, x.get('N') + y.get('J'))});
-        scene0.setEnemies(Res.ZUZU + "_49" + " " + Res.MONSTER + "_99", 0);
+        scene0.setEnemies(Res.ZUZU + "_49" + " " + Res.MONSTER + "_99", 0, 4);
         scenes.put(0, scene0);
 
         //cena 1

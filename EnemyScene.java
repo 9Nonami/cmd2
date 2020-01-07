@@ -55,27 +55,33 @@ public class EnemyScene extends Scene {
 	@Override
 	public void update() {
 		super.update();
-		if (res.equalsIgnoreCase("run")) {
-			game.changeScene();
-		} else if (res.equalsIgnoreCase("attack")) {
-			boolean playerFirst = false;
-			if (enemy.getSpeed() == game.getPlayer().getSpeed()) {
-				int random = new Random().nextInt(2);
-				if (random % 2 == 0) {
+
+		if (player.isAlive() && enemy.isAlive()) {
+			if (res.equalsIgnoreCase("run")) {
+				game.changeScene();
+			} else if (res.equalsIgnoreCase("attack")) {
+				boolean playerFirst = false;
+				if (enemy.getSpeed() == game.getPlayer().getSpeed()) {
+					int random = new Random().nextInt(2);
+					if (random % 2 == 0) {
+						playerFirst = true;
+					}
+				} else if (enemy.getSpeed() < game.getPlayer().getSpeed()) {
 					playerFirst = true;
 				}
-			} else if (enemy.getSpeed() < game.getPlayer().getSpeed()) {
-				playerFirst = true;
+				if (playerFirst) {
+					player.attack(enemy);
+					enemy.attack(player);
+				} else {
+					enemy.attack(player);
+					player.attack(enemy);
+				}
+				lockLog = false;
 			}
-			if (playerFirst) {
-				player.attack(enemy);
-				enemy.attack(player);
-			} else {
-				enemy.attack(player);
-				player.attack(enemy);
-			}
-			lockLog = false;
-		}
+		} else {
+			res = "";
+			game.changeScene();
+		}			
 		clearScreen();
 	}
 
@@ -90,6 +96,10 @@ public class EnemyScene extends Scene {
 			player.displayBattleLog();
 			enemy.displayBattleLog();
 		}
+
+		System.out.println("Player HP: " + player.getHp());
+		System.out.println(enemy.getName() + " HP: " + enemy.getHp());
+
 		lockLog = true;
 	}
 

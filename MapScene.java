@@ -16,6 +16,9 @@ public class MapScene extends Scene {
 
     private int level;
 
+    private int encounterRate;
+    public static final int MAX_ENCOUNTER_RATE = 10;
+
 
 
     public MapScene(Game game, char[] image, Exit[] exits) {
@@ -27,10 +30,11 @@ public class MapScene extends Scene {
         this.npcs = npcs;
     }
 
-    public void setEnemies(String enemies, int level) {
+    public void setEnemies(String enemies, int level, int encounterRate) {
         containsEnemies = true;
         this.enemies = enemies;
         this.level = level;
+        this.encounterRate = encounterRate;
     }
 
     public void setEnemies(char encounterTile, String enemies) {
@@ -50,8 +54,8 @@ public class MapScene extends Scene {
     private boolean isGoingToEncounterAnEnemy(int newId) { //fix //specific tile
         if (containsEnemies) {
             if (player.getId() != newId) {
-                random = new Random().nextInt(10);
-                if (random < 10) { //definir essa parada aqui
+                random = new Random().nextInt(MAX_ENCOUNTER_RATE);
+                if (random < encounterRate) { //definir essa parada aqui
                     player.setId(newId);
                     game.getEnemyScene().setNextScene(game.getScene()); //isso aqui esta atribuindo a cena para a qual voltar
                     game.getEnemyScene().configureEnemies(enemies, level); //"uno_9 dos_99"

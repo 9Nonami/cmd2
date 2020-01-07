@@ -30,7 +30,7 @@ public abstract class Scene {
     }
 
     public void update() {
-    	res = game.getScanner().next();
+    	res = game.getScanner().nextLine();
     	verifyPriorityCommands();
     }
 
