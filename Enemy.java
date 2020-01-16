@@ -54,16 +54,21 @@ public class Enemy {
 	}
 
 	public void displayBattleLog() {
-		if (successfulAttack) {
-			System.out.println(name + Res.SUCCESS_MESSAGE);
-			if (enoughAttack) {
-				System.out.println("Damage: " + damage);
+		if (alive) {
+			if (successfulAttack) {
+				System.out.println(name + Res.SUCCESS_MESSAGE);
+				if (enoughAttack) {
+					System.out.println("Damage: " + damage);
+				} else {
+					System.out.println(name + Res.NOT_ENOUGH_ATTACK_MESSAGE);
+				}
 			} else {
-				System.out.println(name + Res.NOT_ENOUGH_ATTACK_MESSAGE);
+				System.out.println(name + Res.FAIL_MESSAGE);
 			}
 		} else {
-			System.out.println(name + Res.FAIL_MESSAGE);
+			System.out.println(name + " is *DEAD*");
 		}
+
 		System.out.println("");
 		successfulAttack = false;
 		enoughAttack = false;

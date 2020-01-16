@@ -14,6 +14,7 @@ public class Player {
 	private boolean alive;
 
 	private int level;
+	private int exp;
 
 	private boolean successfulAttack;
 	private boolean enoughAttack;
@@ -28,12 +29,13 @@ public class Player {
 		//--load
 
 		hp = 10;
-		attack = 7;
+		attack = 20; //5
 		deffense = 6;
 		speed = 5;
-		luck = 50;
+		luck = 100; //50
 		alive = true;
 
+		exp = 0;
 		level = 0;
 	}
 
@@ -48,6 +50,7 @@ public class Player {
 					enemy.setHp(enemy.getHp() - damage);
 					if (enemy.getHp() <= 0) {
 						enemy.setAlive(false);
+						enemy.setHp(0);
 					}	
 				} else {
 					enoughAttack = false;
@@ -158,6 +161,36 @@ public class Player {
 			luckIncrement = 50;
 		}
 		return luck + luckIncrement;
+	}
+
+	public void levelUp(int enemyExp) {
+		if (level < 5) {
+			exp += enemyExp;
+			if (exp >= 80 && level < 5) {
+				up();
+			} else if (exp >= 40 && level < 4) {
+				up();
+			} else if (exp >= 20 && level < 3) {
+				up();
+			} else if (exp >= 10 && level < 2) {
+				up();
+			} else if (exp >= 5 && level < 1) {
+				up();
+			}
+		}
+	}
+
+	private void up() {
+		level++;
+		hp++;
+		attack++;
+		deffense++;
+		speed++;
+		luck++;
+	}
+
+	public int getLevel() {
+		return level;
 	}
 
 }

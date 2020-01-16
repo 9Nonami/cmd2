@@ -71,15 +71,22 @@ public class EnemyScene extends Scene {
 				}
 				if (playerFirst) {
 					player.attack(enemy);
-					enemy.attack(player);
+					if (enemy.isAlive()) {
+						enemy.attack(player);	
+					} else {
+						player.levelUp(game.getExp(mapLevel));
+					}
 				} else {
 					enemy.attack(player);
-					player.attack(enemy);
+					if (player.isAlive()) {
+						player.attack(enemy);	
+					}
 				}
 				lockLog = false;
 			}
 		} else {
-			res = "";
+			res = ""; //soh por seguranca, ver se pode apagar
+			//change scene soh no caso do inimigo morto, player = game over
 			game.changeScene();
 		}			
 		clearScreen();

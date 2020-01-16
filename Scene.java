@@ -26,7 +26,10 @@ public abstract class Scene {
     private void verifyPriorityCommands() {
     	if (res.equalsIgnoreCase("quit")) {
     		System.exit(0);
-    	}
+    	} else if (res.equalsIgnoreCase("mylevel")) {
+            System.out.println(player.getLevel());
+            System.exit(0); //del
+        }
     }
 
     public void update() {

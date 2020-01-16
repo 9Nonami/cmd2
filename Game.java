@@ -16,6 +16,7 @@ public class Game { //colisao
     //
     private Enemies enemies;
     private EnemyScene enemyScene;
+    private HashMap<Integer, Integer> levelUp;
 
 
 
@@ -156,6 +157,11 @@ public class Game { //colisao
         y.put('J', 290);
         y.put('K', 319);
 
+        levelUp = new HashMap<Integer, Integer>(); //fazer num for
+        levelUp.put(0, 1); //ini - 5;  | exp = 2*i-1
+        levelUp.put(1, 2);
+        levelUp.put(2, 3);
+
 
         player = new Player(x.get('A') + y.get('A'));
         player.setLastId(player.getId());
@@ -243,6 +249,14 @@ public class Game { //colisao
 
     public int getScene() {
         return scene;
+    }
+
+    //ver. criar um metodo que retor so o valor de acordom com o par. level
+    public int getExp(int key) { //mudar nome do mapa
+    	if (levelUp.containsKey(key)) {
+    		return levelUp.get(key);
+    	}
+    	return 0;
     }
 
 }
